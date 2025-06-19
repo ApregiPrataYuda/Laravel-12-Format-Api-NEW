@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\App;
 use Illuminate\Auth\AuthenticationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Database\QueryException;
@@ -56,12 +57,30 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // Database connection error (PDO)
+        // $exceptions->render(function (\PDOException $e, $request): JsonResponse {
+        //     return ApiResponse::error(
+        //         'Tidak bisa terhubung ke database.',
+        //         null,
+        //         500
+        //     );
+        // });
+
         $exceptions->render(function (\PDOException $e, $request): JsonResponse {
-            return ApiResponse::error(
-                'Tidak bisa terhubung ke database.',
-                null,
-                500
-            );
+            if (App::isProduction() && !App::isLocal()) {
+                // Production, tampilkan pesan umum
+                return ApiResponse::error(
+                    'Tidak bisa terhubung ke database.',
+                    null,
+                    500
+                );
+            } else {
+                // Development/local, tampilkan detail error untuk debugging
+                return ApiResponse::error(
+                    $e->getMessage(),
+                    null,
+                    500
+                );
+            }
         });
 
         // Query error (misalnya syntax SQL salah)
