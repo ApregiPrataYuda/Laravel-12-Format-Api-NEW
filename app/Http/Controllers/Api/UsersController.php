@@ -106,8 +106,8 @@ class UsersController extends Controller
         $user = $this->Users->create([
             'name'     => $data['name'],
             'email'    => $data['email'],
-            // 'password' => bcrypt($data['password']), // pastikan hash password
-            // 'role'     => $data['role'] ?? 'user'     // default role jika ada
+            'password' => bcrypt($data['password']), // pastikan hash password
+            'role'     => $data['role'] ?? 'user'     // default role jika ada
         ]);
 
         return ApiResponse::success(new UsersResources($user), 'Success Create New User', 201);

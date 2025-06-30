@@ -6,16 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class Users extends Model
 {
-    use HasFactory;
+    use HasFactory;  use HasApiTokens, HasFactory, Notifiable;
     // SoftDeletes;
     protected $table = 'users';
     protected $primaryKey = 'id';
     public $incrementing = true;
     public $timestamps = true;
-    protected $fillable = ['name','email'];
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role'
+    ];
+    
 
 
     //opsional

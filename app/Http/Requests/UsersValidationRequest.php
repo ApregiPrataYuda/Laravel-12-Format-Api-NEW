@@ -20,8 +20,8 @@ class UsersValidationRequest extends FormRequest
         return [
             'name'     => 'required|string|max:255',
             'email'    => 'required|email',
-            // 'password' => 'required|string|min:6',
-            // 'role'     => 'required|string'
+            'password' => 'required|string|min:6',
+            'role'     => 'required|string'
         ];
     }
 
@@ -32,9 +32,9 @@ class UsersValidationRequest extends FormRequest
             'email.required'    => 'Email wajib diisi.',
             'email.email'       => 'Format email tidak valid.',
             'email.unique'      => 'Email sudah digunakan.',
-            // 'password.required' => 'Password wajib diisi.',
-            // 'password.min'      => 'Password minimal 6 karakter.',
-            // 'role.required'     => 'Role wajib diisi.'
+            'password.required' => 'Password wajib diisi.',
+            'password.min'      => 'Password minimal 6 karakter.',
+            'role.required'     => 'Role wajib diisi.'
         ];
     }
 }

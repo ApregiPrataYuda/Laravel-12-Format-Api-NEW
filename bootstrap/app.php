@@ -10,6 +10,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use App\Helpers\ApiResponse;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use Illuminate\Routing\Middleware\SubstituteBindings;
+use App\Http\Middleware\FormatUnauthenticated;
+
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,15 +24,17 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
 
+    //untuk pengelolaan api yang bersipat SPA
     ->withMiddleware(function (Middleware $middleware) {
-        // $middleware->api(append: [
-        //     \App\Http\Middleware\FormatUnauthenticated::class,
-        //     \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        //     'throttle:api',
-        //     \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        // ]);
+        $middleware->api(append: [
+            EnsureFrontendRequestsAreStateful::class,
+            SubstituteBindings::class,
+            'throttle:api',
+            FormatUnauthenticated::class,
+        ]);
     })
-
+    
+    
     ->withExceptions(function (Exceptions $exceptions) {
         // Validation errors (422)
         $exceptions->renderable(function (ValidationException $e, $request): JsonResponse {
